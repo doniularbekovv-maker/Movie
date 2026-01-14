@@ -4,13 +4,13 @@ from django.conf.global_settings import EMAIL_BACKEND
 from dotenv import load_dotenv
 import os
 
-
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv()
@@ -34,8 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'movie_app',
-    'rest_framework_swagger',  # Swagger
-    'drf_yasg', # Yet Another Swagger generator
+    'rest_framework_swagger',
+    'drf_yasg',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     "phonenumber_field",
     'django_filters',
     'allauth',
@@ -44,10 +46,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
-    'rest_framework_swagger',
-    'drf_yasg',
-    'rest_framework_simplejwt',
-    'pip install django-cors-headers',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -166,10 +165,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend',
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.LWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -178,3 +176,11 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+}
